@@ -82,6 +82,7 @@ function onYouTubeIframeAPIReady() {
 			'onStateChange': onPlayerStateChange
 		}
 	});
+	player.setVolume(100);
 }
 
 function onPlayerReady(event) {
