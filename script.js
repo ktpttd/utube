@@ -58,6 +58,7 @@ const getPlayListItems = async playlistID => {
 	})
 	//Lay NextPage Token
 	token = result.data.nextPageToken;
+	resultArr = shuffle(resultArr);
 	resultArr.push(result.data);
 	while (token) {
 		let result = await axios.get(`https://www.googleapis.com/youtube/v3/playlistItems`, {
