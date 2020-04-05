@@ -80,9 +80,8 @@ function onYouTubeIframeAPIReady() {
 		events: {
 			'onReady': onPlayerReady,
 			'onStateChange': onPlayerStateChange
-		}
+		},
 	});
-	player.setVolume(100);
 }
 
 function onPlayerReady(event) {
@@ -94,6 +93,10 @@ function onPlayerReady(event) {
 	repeat.style.display = "block";
 	form.style.display = "flex";
 	para.innerHTML = listVid[rand].title;
+
+	event.target.mute();
+	event.target.setVolume(100);
+
 	playButton(player.getPlayerState() !== 5);
 }
 
