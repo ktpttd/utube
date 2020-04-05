@@ -73,7 +73,7 @@ const getPlayListItems = async playlistID => {
 		token = result.data.nextPageToken;
 		resultArr.push(result.data);
 	}
-	return shuffle(resultArr);
+	return resultArr;
 };
 
 //Xu li Item de lay Title video va videoId
