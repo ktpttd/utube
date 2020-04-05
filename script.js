@@ -85,7 +85,7 @@ function onYouTubeIframeAPIReady() {
 }
 
 function onPlayerReady(event) {
-	player.setPlaybackQuality("small");
+	player.setPlaybackQuality("hd720");
 	btn.style.display = "block";
 	prev.style.display = "block";
 	next.style.display = "block";
@@ -93,10 +93,6 @@ function onPlayerReady(event) {
 	repeat.style.display = "block";
 	form.style.display = "flex";
 	para.innerHTML = listVid[rand].title;
-
-	// event.target.mute();
-	event.target.setVolume(100);
-
 	playButton(player.getPlayerState() !== 5);
 }
 
