@@ -24,61 +24,81 @@ var para = document.getElementById('title');
 var rand;
 var repeatStatus = 0;
 
+function shuffle(array) {
+	var currentIndex = array.length, temporaryValue, randomIndex;
+
+	// While there remain elements to shuffle...
+	while (0 !== currentIndex) {
+
+		// Pick a remaining element...
+		randomIndex = Math.floor(Math.random() * currentIndex);
+		currentIndex -= 1;
+
+		// And swap it with the current element.
+		temporaryValue = array[currentIndex];
+		array[currentIndex] = array[randomIndex];
+		array[randomIndex] = temporaryValue;
+	}
+
+	return array;
+}
+
 //Request de lay Playlist Item
 const getPlayListItems = async playlistID => {
 	var token;
 	var resultArr = [];
-    const result = await axios.get(`https://www.googleapis.com/youtube/v3/playlistItems`, {
-      params: {
-        part: 'id,snippet',
-        maxResults: 50,
-        playlistId: playlistID,
-        key: apiKey
-      }
-    })
-    //Lay NextPage Token
+	const result = await axios.get(`https://www.googleapis.com/youtube/v3/playlistItems`, {
+		params: {
+			part: 'id,snippet',
+			maxResults: 50,
+			playlistId: playlistID,
+			key: apiKey
+		}
+	})
+	//Lay NextPage Token
 	token = result.data.nextPageToken;
 	resultArr.push(result.data);
 	while (token) {
 		let result = await axios.get(`https://www.googleapis.com/youtube/v3/playlistItems`, {
-      	params: {
-        part: 'id,snippet',
-        maxResults: 50,
-        playlistId: playlistID,
-        key: apiKey,
-		pageToken: token
-      	}
-    	})
+			params: {
+				part: 'id,snippet',
+				maxResults: 50,
+				playlistId: playlistID,
+				key: apiKey,
+				pageToken: token
+			}
+		})
 		token = result.data.nextPageToken;
 		resultArr.push(result.data);
-	}	
+	}
+	shuffle(resultArr);
 	return resultArr;
 };
 
 //Xu li Item de lay Title video va videoId
 getPlayListItems("PLI46B2PcLlxn3Ty3keXeo1n6qLEJiFkQL")
-.then(data => {
-	data.forEach(item => {
-    	item.items.forEach(i => listVid.push({title: i.snippet.title, idVid: i.snippet.resourceId.videoId}));
+	.then(data => {
+		data.forEach(item => {
+			item.items.forEach(i => listVid.push({ title: i.snippet.title, idVid: i.snippet.resourceId.videoId }));
+		});
+		//Tao random index
+		rand = Math.floor(Math.random() * listVid.length);
+		checkPrivate();
+		tag.src = "https://www.youtube.com/iframe_api";
+		var firstScriptTag = document.getElementsByTagName('script')[0];
+		firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 	});
-	//Tao random index
-    rand = Math.floor(Math.random()*listVid.length);
-    checkPrivate();
-    tag.src = "https://www.youtube.com/iframe_api";
-	var firstScriptTag = document.getElementsByTagName('script')[0];
-	firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-});
 
 
 function onYouTubeIframeAPIReady() {
 	player = new YT.Player('player', {
-	  height: '0',
-	  width: '0',
-	  videoId: listVid[rand].idVid,
-	  events: {
-	    'onReady': onPlayerReady,
-	    'onStateChange': onPlayerStateChange
-	  }
+		height: '0',
+		width: '0',
+		videoId: listVid[rand].idVid,
+		events: {
+			'onReady': onPlayerReady,
+			'onStateChange': onPlayerStateChange
+		}
 	});
 }
 
@@ -102,7 +122,7 @@ repeat.onclick = repeatVideo;
 ok.onclick = changePlaylistId;
 
 function playButton(play) {
-		icon.src = play ? "icon/pause.svg" : "icon/play.svg";
+	icon.src = play ? "icon/pause.svg" : "icon/play.svg";
 }
 
 function changeStatusPlay() {
@@ -111,15 +131,15 @@ function changeStatusPlay() {
 		playButton(false);
 	} else if (player.getPlayerState() != 0) {
 		playVideo();
-    	playButton(true);
-    	
-    } 
+		playButton(true);
+
+	}
 }
 
 function onPlayerStateChange(event) {
-    if (event.data === 0) {
-    	playButton(false); 
-    }
+	if (event.data === 0) {
+		playButton(false);
+	}
 }
 
 function playVideo() {
@@ -148,11 +168,11 @@ function prevSong() {
 		rand -= 1;
 	}
 	checkPrivateBack();
-	player.loadVideoById({videoId:listVid[rand].idVid});
+	player.loadVideoById({ videoId: listVid[rand].idVid });
 	para.innerHTML = listVid[rand].title;
 	musicPlayer.style.backgroundImage = "url('https://source.unsplash.com/random/600*250/?landscape')";
 	bg.style.backgroundImage = "url('https://source.unsplash.com/random/600*250/?landscape')";
-	playButton(true);			
+	playButton(true);
 }
 
 //next song
@@ -169,7 +189,7 @@ function nextSong() {
 		rand += 1;
 	}
 	checkPrivate();
-	player.loadVideoById({videoId:listVid[rand].idVid});
+	player.loadVideoById({ videoId: listVid[rand].idVid });
 	para.innerHTML = listVid[rand].title;
 	musicPlayer.style.backgroundImage = "url('https://source.unsplash.com/random/600*250/?landscape')";
 	bg.style.backgroundImage = "url('https://source.unsplash.com/random/600*250/?landscape')";
@@ -180,20 +200,20 @@ function nextSong() {
 //Next bai moi khi video het
 function nextVideo() {
 	if (repeatStatus == 1) {
-		player.loadVideoById({videoId:listVid[rand].idVid});
+		player.loadVideoById({ videoId: listVid[rand].idVid });
 	} else {
-		rand = Math.round(Math.random()*listVid.length);
+		rand = Math.round(Math.random() * listVid.length);
 		checkPrivate();
-		player.loadVideoById({videoId:listVid[rand].idVid});
+		player.loadVideoById({ videoId: listVid[rand].idVid });
 		para.innerHTML = listVid[rand].title;
 		musicPlayer.style.backgroundImage = "url('https://source.unsplash.com/random/600*250/?landscape')";
 		bg.style.backgroundImage = "url('https://source.unsplash.com/random/600*250/?landscape')";
 	}
-	
+
 }
 
 //Phat lap lai
-function repeatVideo () {
+function repeatVideo() {
 	if (repeatStatus == 0) {
 		repeat.style.opacity = "0.8";
 		repeatStatus = 1;
@@ -221,13 +241,13 @@ function checkPrivateBack() {
 			rand = listVid.length - 1;
 		} else {
 			rand -= 1;
-		}		
+		}
 		checkPrivateBack();
 	}
 };
 
 //Khi nhap Playlist Id moi
-function changePlaylistId () {
+function changePlaylistId() {
 	var newId = newPlaylistId.value;
 	if (newId == "") {
 		return;
@@ -242,26 +262,26 @@ function changePlaylistId () {
 	para.innerHTML = "Loading...";
 
 	getPlayListItems(newId)
-	.then(data => {
-		data.forEach(item => {
-	    	item.items.forEach(i => listVid.push({title: i.snippet.title, idVid: i.snippet.resourceId.videoId}));
+		.then(data => {
+			data.forEach(item => {
+				item.items.forEach(i => listVid.push({ title: i.snippet.title, idVid: i.snippet.resourceId.videoId }));
+			});
+			rand = Math.floor(Math.random() * listVid.length);
+			checkPrivate();
+			btn.style.display = "block";
+			prev.style.display = "block";
+			next.style.display = "block";
+			btn2.style.display = "block";
+			repeat.style.display = "block";
+			para.innerHTML = listVid[rand].title;
+			player.loadVideoById({ videoId: listVid[rand].idVid });
+			playButton(true);
 		});
-	    rand = Math.floor(Math.random()*listVid.length);
-	    checkPrivate();
-	    btn.style.display = "block";
-		prev.style.display = "block";
-		next.style.display = "block";
-		btn2.style.display = "block";
-		repeat.style.display = "block";
-		para.innerHTML = listVid[rand].title;			    
-		player.loadVideoById({videoId:listVid[rand].idVid});
-		playButton(true);
-	});	
 
 }
 
 //Chuyen bai
-setInterval(function() {
+setInterval(function () {
 	if (player.getPlayerState() == 0) {
 		nextVideo();
 		playButton(true);
