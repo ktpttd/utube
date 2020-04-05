@@ -94,7 +94,7 @@ function onPlayerReady(event) {
 	form.style.display = "flex";
 	para.innerHTML = listVid[rand].title;
 
-	event.target.mute();
+	// event.target.mute();
 	event.target.setVolume(100);
 
 	playButton(player.getPlayerState() !== 5);
