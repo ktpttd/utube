@@ -1,5 +1,6 @@
 
 const apiKey = "AIzaSyDt3xOCUSXYnj89Xl-etS1MfMcS_czI4Tc";
+var defaultPlaylistID = "PLI46B2PcLlxn3Ty3keXeo1n6qLEJiFkQL";
 var listVid = [];
 var listVideo;
 var player;
@@ -76,7 +77,7 @@ const getPlayListItems = async playlistID => {
 };
 
 //Xu li Item de lay Title video va videoId
-getPlayListItems("PLI46B2PcLlxn3Ty3keXeo1n6qLEJiFkQL")
+getPlayListItems(defaultPlaylistID)
 	.then(data => {
 		data.forEach(item => {
 			item.items.forEach(i => listVid.push({ title: i.snippet.title, idVid: i.snippet.resourceId.videoId }));
