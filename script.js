@@ -168,8 +168,7 @@ function nextSong() {
 	if (rand + 1 == listVid.length) {
 		rand = 0;
 	} else {
-		//rand += 1;
-		rand += Math.floor(Math.random() * 3);
+		rand += 1;
 	}
 	checkPrivate();
 	player.loadVideoById({ videoId: listVid[rand].idVid });
