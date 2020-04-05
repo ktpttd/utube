@@ -25,25 +25,6 @@ var para = document.getElementById('title');
 var rand;
 var repeatStatus = 0;
 
-function shuffle(array) {
-	var currentIndex = array.length, temporaryValue, randomIndex;
-
-	// While there remain elements to shuffle...
-	while (0 !== currentIndex) {
-
-		// Pick a remaining element...
-		randomIndex = Math.floor(Math.random() * currentIndex);
-		currentIndex -= 1;
-
-		// And swap it with the current element.
-		temporaryValue = array[currentIndex];
-		array[currentIndex] = array[randomIndex];
-		array[randomIndex] = temporaryValue;
-	}
-
-	return array;
-}
-
 //Request de lay Playlist Item
 const getPlayListItems = async playlistID => {
 	var token;
@@ -59,6 +40,8 @@ const getPlayListItems = async playlistID => {
 	//Lay NextPage Token
 	token = result.data.nextPageToken;
 	resultArr.push(result.data);
+	shuffleArray(resultArr);
+
 	while (token) {
 		let result = await axios.get(`https://www.googleapis.com/youtube/v3/playlistItems`, {
 			params: {
